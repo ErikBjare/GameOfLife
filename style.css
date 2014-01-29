@@ -1,0 +1,30 @@
+body {
+	background-color: #000000;
+	margin: 0px;
+	color: #FFFFFF;
+}
+
+#overlay {
+	z-index: 1;
+	padding: 20px 30px 20px 30px;
+	background-color: rgba(0, 0, 0, 0.6);
+	border: 2px #BBB solid;
+	border-radius: 10px;
+	box-shadow: 0px 0px 25px 0px;
+}
+
+h1 {
+	text-align: center;
+	margin: 0px;
+}
+
+canvas {
+	width: 100%;
+	height: 100%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#output {
+	font-family: monospace;
+}
