@@ -1,6 +1,6 @@
 <html>
 	<head>
-		<title>Games Of Life</title>
+		<title>Game Of Life</title>
 		<link rel="stylesheet" type="text/css" href="style.css">
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 		<script src="misc.js"></script>
@@ -18,36 +18,51 @@
 			var canvas=document.getElementById("canvas");
 			var ctx=canvas.getContext("2d");
 
+			// Default vars
 			var spawnrate = 0.1
-
 			var cellSize = 8;
 			var gridSize = 300;
+			var updateInterval = 200;
 
-			var grid = new Array(gridSize);
-			for (var i=0; i<gridSize; i++) {
-				grid[i] = new Array(gridSize);
-				for (var j=0; j<gridSize; j++) {
-					grid[i][j] = Math.round(Math.random()-(spawnrate-0.5)) <= 0 ? true:false;
+			var grid;
+
+			function init() {
+				param_spawnrate = $.getUrlVar("spawnrate")
+				if(param_spawnrate) spawnrate = parseFloat(param_spawnrate);
+
+				param_cellSize = $.getUrlVar("cellSize")
+				if(param_cellSize) cellSize = parseFloat(param_cellSize);
+
+				param_gridSize = $.getUrlVar("gridSize")
+				if(param_gridSize) gridSize = parseFloat(param_gridSize);
+
+				param_updateInterval = $.getUrlVar("updateInterval")
+				if(param_updateInterval) updateInterval = parseFloat(param_updateInterval);
+
+				param_undead = $.getUrlVar("undead")
+				if(param_undead) rule_standard = rule_undead;
+
+				grid = new Array(gridSize);
+
+				for (var i=0; i<gridSize; i++) {
+					grid[i] = new Array(gridSize);
+					for (var j=0; j<gridSize; j++) {
+						grid[i][j] = Math.round(Math.random()-(spawnrate-0.5)) <= 0 ? true:false;
+					}
 				}
 			}
-
-			grid[gridSize/2][gridSize/2] = true
-			grid[gridSize/2][gridSize/2+1] = true
-			grid[gridSize/2+1][gridSize/2] = true
-			grid[gridSize/2+1][gridSize/2+1] = true
 
 			function main() {
 				window.addEventListener('resize', resizeCanvas, false);
 
 			    resizeCanvas()
 
-			    nextCycle()
-				setInterval(nextCycle, 200);
+				setInterval(nextCycle, updateInterval);
 			}
 
-			function nextCycle() {
+			function nextCycle(timestamp) {
 				grid = rule_standard(grid)
-				draw()
+				window.requestAnimationFrame(draw)
 			}
 
 			function neighbors(row, col) {
@@ -149,6 +164,7 @@
 				draw();
 			}
 
+			init()
 			main()
 		</script>
 	</body>
