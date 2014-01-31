@@ -22,12 +22,15 @@
     		This is where the controls are supposed to go later on.
     		<hr/>
     		<div style="text-align: center;">
-	    		<button type="button" class="btn btn-default btn-sm" ng-click="pause()">
-	    			<span class="glyphicon glyphicon-pause"></span> Pause
-	    		</button>
-	    		<button type="button" class="btn btn-default btn-sm">
-	    			<span class="glyphicon glyphicon-refresh"></span> Reset
-	    		</button>
+    			<div class="btn-group">
+		    		<button type="button" id="togglePause" class="btn btn-default btn-sm" onclick="togglePause()">
+		    			<span id="togglePauseIcon" class="glyphicon glyphicon-pause"></span>
+		    			<span id="togglePauseText">Pause</span>
+		    		</button>
+		    		<button type="button" class="btn btn-default btn-sm" onclick="generateGrid()">
+		    			<span class="glyphicon glyphicon-refresh"></span> Reset
+		    		</button>
+		    	</div>
 	    	</div>
     	</div>
 

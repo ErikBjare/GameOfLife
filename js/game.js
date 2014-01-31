@@ -30,6 +30,14 @@ function init() {
 	param_undead = $.getUrlVar("undead")
 	if(param_undead) rule_standard = rule_undead;
 
+	generateGrid();
+
+	// Pauses execution while not focused and resumes when focus returns
+	$(window).blur(function(){ running = false });
+	$(window).focus(function(){ running = true });
+}
+
+function generateGrid() {
 	grid = new Array(gridSize);
 
 	for (var i=0; i<gridSize; i++) {
@@ -48,12 +56,15 @@ function main() {
 	setInterval(nextCycle, updateInterval);
 }
 
-function pause() {
+function togglePause() {
 	if (running) {
 		running = false
+		$("#togglePauseText").text("Play")
 	} else {
 		running = true
+		$("#togglePauseText").text("Pause")
 	}
+	$("#togglePauseIcon").toggleClass("glyphicon-pause glyphicon-play")
 }
 
 function nextCycle(timestamp) {
@@ -156,8 +167,7 @@ function clearCanvas() {
 	rows = grid.length
 	cols = grid[0].length
 
-	offsetWidth = (canvas.width-cellSize*gridSize)/2
-	offsetHeight = (canvas.height-cellSize*gridSize)/2
+	calculateOffset();
 
 	oldFill = ctx.fillStyle;
 	ctx.fillStyle = "#222222";
@@ -172,13 +182,19 @@ function clearCanvas() {
 }
 
 function resizeCanvas() {
-	canvas.width = $("#canvas").width();
-	canvas.height = $("#canvas").height();
-
-	offsetWidth = (canvas.width-cellSize*cols)/2
-	offsetHeight = (canvas.height-cellSize*rows)/2
+	//canvas.width = $("#canvas").width();
+	//canvas.height = $("#canvas").height();
+	canvas.height = window.innerHeight;
+	canvas.width = window.innerWidth;
 
 	draw();
+}
+
+function calculateOffset() {
+	//Uncomment +0.5 for effect on previously occupied space (Does not survive resize/redraw)
+	offsetWidth = ~~((canvas.width-cellSize*cols)/2) //+0.5
+	offsetHeight = ~~((canvas.height-cellSize*rows)/2) //+0.5
+
 }
 
 init()

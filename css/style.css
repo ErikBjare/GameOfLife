@@ -4,6 +4,28 @@ body {
 	color: #FFFFFF;
 }
 
+h1 {
+	text-align: center;
+	margin: 0px;
+}
+
+h2 {
+	text-align: center;
+	font-size: 18pt;
+	margin: 0px;
+}
+
+hr {
+	margin: 10px 0px 15px 0px;
+}
+
+canvas {
+	width: 100%;
+	height: 100%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 .overlay {
 	z-index: 1;
 	background-color: rgba(0, 0, 0, 0.6);
@@ -26,24 +48,6 @@ body {
 	border-radius: 0px 0px 0px 20px;
 }
 
-h1 {
-	text-align: center;
-	margin: 0px;
-}
-
-h2 {
-	text-align: center;
-	font-size: 18pt;
-	margin: 0px;
-}
-
-hr {
-	margin: 10px 0px 15px 0px;
-}
-
-canvas {
-	width: 100%;
-	height: 100%;
-	margin-left: auto;
-	margin-right: auto;
+#togglePause {
+	width: 80px;
 }
