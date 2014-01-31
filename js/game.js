@@ -7,12 +7,14 @@ var cellSize = 8;
 var gridSize = 300;
 var updateInterval = 200;
 var running = true;
+var paused = false;
 
 var grid;
 var rows; var cols;
 var offsetWidth;
 var offsetHeight;
-var diffQueue = new Array();
+var diffQueue = [];
+var mousedown = false;
 
 function init() {
 	param_spawnrate = $.getUrlVar("spawnrate")
@@ -30,46 +32,75 @@ function init() {
 	param_undead = $.getUrlVar("undead")
 	if(param_undead) rule_standard = rule_undead;
 
-	generateGrid();
+	generateGrid(true);
+    resizeCanvas();
 
 	// Pauses execution while not focused and resumes when focus returns
 	$(window).blur(function(){ running = false });
 	$(window).focus(function(){ running = true });
+
+    // Keymappings
+    var canvasSel = $("#canvas")
+    canvasSel[0].oncontextmenu = function() {return false;}
+    canvasSel.mousedown(function(e) {mousedown = e; canvasOnMouse(e)})
+    canvasSel.mouseup(function(e) {mousedown = false});
+    canvasSel.mousemove(canvasOnMouse);
+    canvasSel.bind('mousewheel', function(e){
+        if(e.originalEvent.wheelDelta /120 > 0) cellSize += 1
+        else if(cellSize > 2) cellSize -= 1
+        resizeCanvas();
+    });
+    $(window).keydown(function(e){ if(e.keyCode == 32) togglePause() });
+
+    window.addEventListener('resize', resizeCanvas, false);
 }
 
-function generateGrid() {
+function generateGrid(noDraw) {
 	grid = new Array(gridSize);
-
 	for (var i=0; i<gridSize; i++) {
 		grid[i] = new Array(gridSize);
 		for (var j=0; j<gridSize; j++) {
-			grid[i][j] = Math.round(Math.random()-(spawnrate-0.5)) <= 0 ? true:false;
+			grid[i][j] = Math.round(Math.random()-(spawnrate-0.5)) <= 0;
 		}
 	}
+    if (!noDraw) draw();
+}
+
+function clearGrid(noDraw) {
+    grid = new Array(gridSize);
+
+    for (var i=0; i<gridSize; i++) {
+        grid[i] = new Array(gridSize);
+        for (var j=0; j<gridSize; j++) {
+            grid[i][j] = false;
+        }
+    }
+    if (!noDraw) draw();
 }
 
 function main() {
-	window.addEventListener('resize', resizeCanvas, false);
-
-    resizeCanvas()
-
 	setInterval(nextCycle, updateInterval);
 }
 
 function togglePause() {
-	if (running) {
-		running = false
-		$("#togglePauseText").text("Play")
+    text = $("#togglePauseText")
+    icon = $("#togglePauseIcon")
+	if (!paused) {
+		paused = true
+		text.text("Play")
+        icon.removeClass("glyphicon-pause")
+        icon.addClass("glyphicon-play")
 	} else {
-		running = true
-		$("#togglePauseText").text("Pause")
+		paused = false
+		text.text("Pause")
+        icon.removeClass("glyphicon-play")
+        icon.addClass("glyphicon-pause")
 	}
-	$("#togglePauseIcon").toggleClass("glyphicon-pause glyphicon-play")
 }
 
 function nextCycle(timestamp) {
-	if (running) {
-		grid = rule_standard(grid)
+	if (running && !paused) {
+		rule_standard(grid)
 		window.requestAnimationFrame(drawDiff)
 	}
 }
@@ -81,61 +112,37 @@ function neighbors(row, col) {
 }
 
 function rule_standard(grid) {
-	newGrid = clone(grid)
+	var newState
 	for (var i=1; i<gridSize-1; i++) {
 		for (var j=1; j<gridSize-1; j++) {
+            newState = null
 			n = neighbors(i, j)
-			if(newGrid[i][j]) {
-				if (n < 2 || n > 3) {
-					newGrid[i][j] = false;	
-					diffQueue.push([i, j, false])
-				}
-			} else {
-				if (n == 3) {
-					newGrid[i][j] = true;
-					diffQueue.push([i, j, true]);
-				}
-			}
+			if(grid[i][j]) {
+                if(n < 2 || n > 3) newState = false;
+            } else if (n == 3) newState = true;
+
+            if (newState != null) diffQueue.push([i, j, newState]);
 		}
 	}
-	return newGrid
 }
 
 function rule_undead(grid) {
-	// Does not care if a cell is alive or not
-	newGrid = clone(grid)
+    var newState
 	for (var i=1; i<gridSize-1; i++) {
 		for (var j=1; j<gridSize-1; j++) {
+            newState = null
 			n = neighbors(i, j)
-			if (n < 2) newGrid[i][j] = false;
-			else if (n <= 3) newGrid[i][j] = true;
-			else if (n > 3) newGrid[i][j] = false;
-		}
-	}
-	return newGrid
-}
+			if (n < 2) newState = false;
+			else if (n <= 3) newState = true;
+			else if (n > 3) newState = false;
 
-function output(grid) {
-	o = $("#output");
-	o.html("");
-	for (var row in grid) {
-		o.append("[");
-		for (var col in grid[row]) {
-			if(grid[row][col] == false) {
-				o.append("O");
-			} else {
-				o.append("X");
-			}
+            if (newState != null) diffQueue.push([i, j, newState]);
 		}
-		o.append("]<br>");
 	}
 }
 
 function draw() {
 	clearCanvas()
-	ctx.fillStyle="#FFFFFF";
-	ctx.strokeStyle="#FFFFFF"
-
 	for (var row in grid) {
 		for (var col in grid[row]) {
 			drawCell(row, col, grid[row][col])
@@ -144,11 +151,9 @@ function draw() {
 }
 
 function drawDiff() {
-	ctx.fillStyle="#FFFFFF";
-	ctx.strokeStyle="#FFFFFF"
-
 	while(diffQueue.length > 0) {
 		change = diffQueue.shift()
+        grid[change[0]][ change[1]] = change[2]
 		drawCell(change[0], change[1], change[2])
 	}
 }
@@ -164,8 +169,8 @@ function drawCell(row, col, state) {
 }
 
 function clearCanvas() {
-	rows = grid.length
-	cols = grid[0].length
+	rows = grid.length;
+	cols = grid[0].length;
 
 	calculateOffset();
 
@@ -175,7 +180,7 @@ function clearCanvas() {
 		         gridSize*cellSize, gridSize*cellSize);
 	ctx.fillStyle = oldFill;
 
-	ctx.strokeStyle="#FFFFFF"
+	ctx.strokeStyle = "#FFFFFF";
 	ctx.rect(offsetWidth, offsetHeight,
 		     gridSize*cellSize+1, gridSize*cellSize+1);
 	ctx.stroke();
@@ -195,6 +200,37 @@ function calculateOffset() {
 	offsetWidth = ~~((canvas.width-cellSize*cols)/2) //+0.5
 	offsetHeight = ~~((canvas.height-cellSize*rows)/2) //+0.5
 
+}
+
+function canvasOnMouse(e) {
+    if(!mousedown) {
+        return
+    }
+    var pos = getCursorPosition(e);
+    var state = (e.button == 0)
+
+    cellCol = Math.floor((pos[0] - offsetWidth)/cellSize)
+    cellRow = Math.floor((pos[1] - offsetHeight)/cellSize)
+    if (0 <= cellCol && cellCol < gridSize &&
+        0 <= cellRow && cellRow < gridSize ) {
+        if (grid[cellCol][cellRow] != state) {
+            diffQueue.push([cellCol, cellRow, !grid[cellCol][cellRow]])
+            drawDiff()
+        }
+    }
+}
+
+function getCursorPosition(e) {
+    var x; var y;
+    if (e.pageX || e.pageY) {
+        x = e.pageX;
+        y = e.pageY;
+    }
+    else {
+        x = e.clientX;
+        y = e.clientY;
+    }
+    return [x, y]
 }
 
 init()

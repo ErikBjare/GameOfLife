@@ -1,22 +1,24 @@
 body {
 	background-color: #000000;
-	margin: 0px;
+	margin: 0;
 	color: #FFFFFF;
 }
 
 h1 {
 	text-align: center;
-	margin: 0px;
+	margin: 0;
+    font-family: "Georgia", serif;
+    font-size: 24px;
 }
 
 h2 {
 	text-align: center;
 	font-size: 18pt;
-	margin: 0px;
+	margin: 0;
 }
 
 hr {
-	margin: 10px 0px 15px 0px;
+	margin: 10px 0 15px 0;
 }
 
 canvas {
@@ -24,30 +26,56 @@ canvas {
 	height: 100%;
 	margin-left: auto;
 	margin-right: auto;
+    cursor: crosshair;
+}
+
+a {
+    color: #31b0d5;
 }
 
 .overlay {
+	position: absolute;
 	z-index: 1;
 	background-color: rgba(0, 0, 0, 0.6);
-	box-shadow: 0px 0px 25px 0px;
-	border-color: #BBB;
-	border-style: solid;
+	box-shadow: 0 0 25px 0;
+    border: solid 0 #BBB;
 }
 
+    .overlay#title {
+        padding: 10px 15px 10px 15px;
+        border-width: 2px;
+        border-radius: 10px;
+    }
 
+    .overlay#controls {
+        padding: 15px;
+        top: 0;
+        right: 0;
+        width: 18em;
+        border-width: 0 0 2px 2px;
+        border-radius: 0 0 0 20px;
+    }
 
-.overlay#title {
-	padding: 20px 30px 20px 30px;
-	border-width: 2px;
-	border-radius: 10px;
-}
+    .overlay#params {
+        bottom: 0;
+        padding: 10px;
+        border-width: 2px 2px 0 0;
+        border-radius: 0 10px 0 0;
+        font-size: 10pt;
+    }
 
-.overlay#controls {
-	padding: 15px;
-	border-width: 0px 0px 2px 2px;
-	border-radius: 0px 0px 0px 20px;
-}
+    .overlay#help {
+        bottom: 0;
+        right: 0;
+        padding: 10px;
+        border-width: 2px 0 0 2px;
+        border-radius: 10px 0 0 0;
+        font-size: 10pt;
+        text-align: center;
+    }
+
 
 #togglePause {
 	width: 80px;
+    text-align: left;
 }
