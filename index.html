@@ -1,10 +1,12 @@
 <html>
 	<head>
 		<title>Game Of Life</title>
-		<link rel="stylesheet" type="text/css" href="css/bootstrap.css"></script>
+        <link href="./favicon.ico" rel="shortcut icon" type="image/x-icon">
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
 		<link rel="stylesheet" type="text/css" href="css/style.css">
-		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="https://code.jquery.com/jquery-1.10.1.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.10/angular.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
 		<script src="js/misc.js"></script>
 	</head>
 
@@ -12,15 +14,31 @@
 		<canvas id="canvas"></canvas>
 		<div style="position: absolute; left: 50%; top: 20px;">
         	<div class="overlay" id="title" style="position: relative; left: -50%;">
-            	<h1>Game of Life</h1>
+            	<h1>Game of <span style="color: #55FF55;">Life</span></h1>
         	</div>
     	</div>
 
-    	<div class="overlay" id="controls" style="position: absolute; right: 0px; top: 0px; width: 18em;">
+    	<div class="overlay" id="controls">
     		<h2>Controls</h2>
     		<hr/>
+    		<!--
+            <div class="input-group input-group-sm">
+				<input type="text" class="form-control">
+			    <div class="input-group-btn">
+			    	<button type="button" class="btn btn-default">Reset</button>
+			        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+					<ul class="dropdown-menu pull-right">
+			            <li><a href="#">Action</a></li>
+			            <li><a href="#">Another action</a></li>
+			            <li><a href="#">Something else here</a></li>
+			            <li class="divider"></li>
+			            <li><a href="#">Separated link</a></li>
+			        </ul>
+			    </div>
+			</div>
     		This is where the controls are supposed to go later on.
     		<hr/>
+    		-->
     		<div style="text-align: center;">
     			<div class="btn-group">
 		    		<button type="button" id="togglePause" class="btn btn-default btn-sm" onclick="togglePause()">
@@ -30,11 +48,40 @@
 		    		<button type="button" class="btn btn-default btn-sm" onclick="generateGrid()">
 		    			<span class="glyphicon glyphicon-refresh"></span> Reset
 		    		</button>
+                    <button type="button" class="btn btn-default btn-sm" onclick="clearGrid()">
+                        <span class="glyphicon glyphicon-trash"></span> Clear
+                    </button>
 		    	</div>
 	    	</div>
     	</div>
 
     	<a href="https://github.com/ErikBjare/GameOfLife"><img style="position: absolute; top: 0; left: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_left_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+
+    	<div class="overlay" id="params">Check out the parameters!
+    		<ul style="padding: 0 0 0 20px; margin: 5px 0 0 0;">
+                <li><a href="./index.html" style="font-weight: bold;">
+                    Default
+                </a></li>
+                <li><a href="./index.html?spawnrate=1&gridSize=100&cellSize=5&updateInterval=100">
+                    A flower
+                </a></li>
+                <li><a href="./index.html?gridSize=150&updateInterval=10">
+                    Speedfreak
+                </a></li>
+                <li><a href="./index.html?spawnrate=1&gridSize=90&cellSize=8&undead=1&updateInterval=100">
+                    I'M FIRIN' MAH...
+                </a></li>
+            </ul>
+    	</div>
+
+        <div class="overlay" id="help">
+            <h2>Help</h2>
+            <hr style="margin: 5px 0 5px 0;"/>
+            Left click/drag to create life<br/>
+            Right click/drag to kill life<br/>
+            Mousewheel to zoom<br/>
+            Spacebar to pause
+        </div>
 
 		<script src="js/game.js"></script>
 	</body>
