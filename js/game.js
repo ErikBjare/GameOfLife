@@ -55,6 +55,26 @@ function init() {
     window.addEventListener('resize', resizeCanvas, false);
 }
 
+function load(newGrid) {
+    gridSize = newGrid.length
+    grid = newGrid
+    draw()
+}
+
+function save() {
+    var output = "["
+    for (i in grid) {
+        output += "["
+        for (j in grid) {
+            output += grid[i][j] ? "1,":"0,";
+        }
+        output += "],"
+    }
+    output += "]"
+    console.log(output)
+}
+
+
 function generateGrid(noDraw) {
 	grid = new Array(gridSize);
 	for (var i=0; i<gridSize; i++) {
