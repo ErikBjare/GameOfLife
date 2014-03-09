@@ -14,15 +14,10 @@ Just open [this link](http://erikbjare.github.io/GameOfLife/) in your favorite b
  - `gridSize` - Number of cells horizontally and vertically   
  - `cellSize` - Height and width of each cell in pixels   
  - `updateInterval` - How many milliseconds to wait before the grid will attempt to update   
- - `undead` - A special mode where dead cells act just like alive cells (i.e., can just come alive without proper reproduction requirement of 3 exactly neighbors)   
+ - `undead` - A special mode where dead cells act just like alive cells (i.e., can come alive when it has 2-3 neighbors)   
 
-###Example parameters
- - [I'M CHARGING MY...](http://erikbjare.github.io/GameOfLife/index.html?spawnrate=1&gridSize=90&cellSize=8&undead=1&updateInterval=100)
- - [Zooming out from the sun](http://erikbjare.github.io/GameOfLife/index.html?spawnrate=1&gridSize=100&cellSize=5&updateInterval=100)
- - [Speedfreak](http://erikbjare.github.io/GameOfLife/index.html?spawnrate=0.5&gridSize=50&cellSize=10&updateInterval=25)
-
-###Feel like contributing?
-Just submit you changes by making a pull requests, they are always welcome!   
+##Feel like contributing?
+Just submit your changes by making a pull requests, they are always welcome!   
 
 -----
 Erik Bjäreholt <erik@bjareho.lt>
